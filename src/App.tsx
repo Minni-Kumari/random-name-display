@@ -6,6 +6,7 @@ import { Card } from './components/card';
 function App() {
   const [data, setData] = useState<any>([])
   const [isLoading , setLoading]=useState(false)
+  const [errorMsg, setErrorMsg] = useState('')
   const fetchApi = async () =>{
     try {
       setLoading(true)
@@ -13,8 +14,10 @@ function App() {
       const {results} = data
       setData(results)
       setLoading(false)
-    } catch (error) {
-      console.log({error})
+    } catch (error:any) {
+      setLoading(false)
+      setErrorMsg('Oh no! there is probem to load data')
+      console.log(error.message)
     }
   }
 
@@ -24,6 +27,12 @@ function App() {
 
   const handleClick = ()=>{
     fetchApi()
+  }
+
+  const renderNoData = ():JSX.Element => {
+    let text = 'Loading...';
+    if(errorMsg) text=errorMsg
+    return <p>{text}</p>
   }
 
   return (
@@ -42,7 +51,7 @@ function App() {
         )
        }) 
        :
-       (<p>Loading...</p>)
+       renderNoData()
       }
 
     </div>
